@@ -23,6 +23,9 @@ testing
 └── demo
 └── SampleControllerTest.java
 
+- The `src/main/java` directory contains the main application code.
+- The `src/test/java` directory contains the test classes.
+  
 ## Technologies
 * Spring Boot 3.0
 
