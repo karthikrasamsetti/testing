@@ -30,7 +30,7 @@ public  class SampleController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<UserResponse>GetById(@PathVariable int id){
+    public ResponseEntity<UserResponse> getById(@PathVariable int id){
         return ResponseEntity.ok(service.getById(id));
     }
     @PutMapping("/user")

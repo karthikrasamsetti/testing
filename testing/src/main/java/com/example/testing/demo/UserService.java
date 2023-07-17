@@ -20,7 +20,6 @@ public class UserService {
                 .name(userDto.name())
                 .email(userDto.email())
                 .build();
-        System.out.println(user);
         userRepository.save(user);
         return UserResponse.builder()
                 .user(user)
@@ -29,6 +28,7 @@ public class UserService {
 
     public ListUserResponse getAll(){
         List<User>users= userRepository.findAll();
+        log.info("user list: "+users);
          return ListUserResponse.builder()
                  .users(users)
                  .build();
@@ -51,7 +51,6 @@ public class UserService {
     public UserResponse patch(int id, Map<String,String> updates){
         log.info("Enter Patch method");
         User user=userRepository.findById(id).orElseThrow();
-        UserResponse newUser;
         if(updates.containsKey("name")){
           user.setName(updates.get("name"));}
         else {

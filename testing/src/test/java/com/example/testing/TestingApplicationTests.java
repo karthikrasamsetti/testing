@@ -1,6 +1,7 @@
 package com.example.testing;
 
 
+import com.example.testing.controller.SampleController;
 import com.example.testing.demo.User;
 import com.example.testing.demo.UserService;
 import com.example.testing.dto.ListUserResponse;
@@ -35,7 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 class TestingApplicationTests {
 
-
+    @Autowired
+    private SampleController sampleController;
     @Autowired
     private ObjectMapper mapper;
     @Autowired
@@ -57,9 +59,10 @@ class TestingApplicationTests {
         usersResponse = new UserResponse(new User(2,"Rahul", "Swagger"));
     }
 
-//    @Test
-//    void contextLoads() {
-//    }
+    @Test
+    void contextLoads() {
+        Assertions.assertThat(sampleController).isNotNull();
+    }
 
     @Test
     void testSayHello() throws Exception {
@@ -81,6 +84,7 @@ class TestingApplicationTests {
         Assertions.assertThat(result).isNotNull();
         String userJson = result.getResponse().getContentAsString();
         Assertions.assertThat(userJson).isEqualToIgnoringCase(mapper.writeValueAsString(listUserResponse));
+
     }
 
     @Test
