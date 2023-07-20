@@ -1,3 +1,5 @@
+server:
+  port: 9000
 spring:
   datasource:
     url: jdbc:mysql://localhost:3306/world
@@ -13,6 +15,7 @@ spring:
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQL8Dialect
+
 
 #logging:
 #  level:

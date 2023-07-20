@@ -81,9 +81,11 @@ class TestingApplicationTests {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
-        Assertions.assertThat(result).isNotNull();
+//        Assertions.assertThat(result).isNotNull();
         String userJson = result.getResponse().getContentAsString();
-        Assertions.assertThat(userJson).isEqualToIgnoringCase(mapper.writeValueAsString(listUserResponse));
+        Assertions.assertThat(userJson)
+                .isNotNull()
+                .isEqualToIgnoringCase(mapper.writeValueAsString(listUserResponse));
 
     }
 

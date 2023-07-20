@@ -14,13 +14,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 @Slf4j
-public class ServiceTests {
+class ServiceTests {
     @InjectMocks
     private UserService service;
 
@@ -29,7 +33,7 @@ public class ServiceTests {
 
     private UserDto user;
     private List<User> users;
-
+    private UserResponse userResponse;
     private User user1;
     @BeforeEach
     void setUp() {
@@ -37,10 +41,10 @@ public class ServiceTests {
                 new User(2,"Amit", "amit@gmail.com"),
                 new User(3,"Amit", "amit@gmail.com"));
         user = new UserDto(2,"Rahul", "Swagger");
-        user1 = new User("Rahul", "Swagger");
+        user1 = new User(2,"Rahul", "Swagger");
     }
     @Test
-    public void testFindAllUsers(){
+    void testFindAllUsers(){
         when(repository.findAll()).thenReturn(users);
         ListUserResponse userList= service.getAll();
         log.info("userList: "+userList);
@@ -49,12 +53,51 @@ public class ServiceTests {
         log.info("repository findAll method is verified");
     }
     @Test
-    public  void createUser(){
+    void createUser(){
+        user = new UserDto(2,"Rahul", "Swagger");
+        user1 = new User("Rahul", "Swagger");
+        when(repository.save(user1)).thenReturn(user1);
         UserResponse userResponse= service.insert(user);
         log.info("user: "+userResponse);
+        Assertions.assertEquals(user1.getName(),userResponse.user().getName());
         verify(repository,times(1)).save(user1);
         log.info("repository save method is verified");
 
+    }
+
+    @Test
+    void getById(){
+        when(repository.findById(user.id())).thenReturn(Optional.ofNullable(user1));
+        UserResponse userResponse=service.getById(user.id());
+        log.info("user: "+userResponse);
+        Assertions.assertEquals(2,userResponse.user().getId());
+        verify(repository,times(1)).findById(user.id());
+        log.info("repository findById method is verified");
+
+    }
+    @Test
+    void update(){
+        when(repository.findById(user.id())).thenReturn(Optional.ofNullable(user1));
+        when(repository.saveAndFlush(user1)).thenReturn(user1);
+        UserResponse userResponse=service.update(user);
+        log.info("user: "+userResponse);
+        Assertions.assertEquals(user1.getName(),userResponse.user().getName());
+        verify(repository,times(1)).saveAndFlush(user1);
+        log.info("repository update method is verified");
+    }
+
+    @Test
+    void patch(){
+        Map<String,String> updates = new HashMap<>();
+        updates.put("name","karthik");
+        User patchedUser = new User(2,"karthik", "amit@gmail.com");
+        when(repository.findById(patchedUser.getId())).thenReturn(Optional.of(patchedUser));
+        when(repository.save(patchedUser)).thenReturn(patchedUser);
+        UserResponse userResponse=service.patch(patchedUser.getId(),updates);
+        log.info("user: "+userResponse);
+        Assertions.assertEquals(patchedUser.getName(),userResponse.user().getName());
+        verify(repository,times(1)).save(patchedUser);
+        log.info("repository patch method is verified");
     }
 
 
